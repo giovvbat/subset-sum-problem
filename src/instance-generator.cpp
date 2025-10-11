@@ -1,6 +1,6 @@
 #include <iostream>
 #include <random>
-#include "../include/insertion_set.hpp"
+#include "../include/insertion-set.hpp"
 
 using namespace std;
 using test_case = tuple<int, insertion_set<int>>; // set and target sum

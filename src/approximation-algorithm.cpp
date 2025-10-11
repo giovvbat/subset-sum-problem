@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include "../include/insertion_set.hpp"
+#include "../include/insertion-set.hpp"
 
 using namespace std;
 using candidate = tuple<int, insertion_set<int>>; // sum and subset

@@ -1,7 +1,7 @@
 #include <iostream>
-#include "../include/insertion_set.hpp"
+#include "../include/insertion-set.hpp"
 #include "approximation-algorithm.cpp"
-#include "instance_generator.cpp"
+#include "instance-generator.cpp"
 
 using namespace std;
 using set_data = tuple<int, insertion_set<int>>; // sum and set
