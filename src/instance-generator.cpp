@@ -3,18 +3,18 @@
 #include "../include/insertion-set.hpp"
 
 using namespace std;
-using test_case = tuple<int, insertion_set<int>>; // set and target sum
+using test_case = tuple<int, int, insertion_set<int>>; // set, total sum and target sum
 
-#define minimum_element_range 0 // fixed
-#define maximum_element_range 15 // changeable
-#define cardinality_range 1, 10 // fixed, changeable
-#define minimum_restricted_sum 1 // fixed
+#define MINIMUM_ELEMENT_RANGE 0 // fixed
+#define MAXIMUM_ELEMENT_RANGE 10 // changeable
+#define CARDINALITY_RANGE 1, 10 // fixed, changeable
+#define MINIMUM_RESTRICTED_SUM 1 // fixed
 
 test_case generate_instance() {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> cardinality_distribution(cardinality_range);
-    std::uniform_int_distribution<int> element_distribution(minimum_element_range, maximum_element_range);
+    std::uniform_int_distribution<int> cardinality_distribution(CARDINALITY_RANGE);
+    std::uniform_int_distribution<int> element_distribution(MINIMUM_ELEMENT_RANGE, MAXIMUM_ELEMENT_RANGE);
     
     insertion_set<int> total_set = {};
     int set_cardinality = cardinality_distribution(gen), total_set_sum = 0, current_set_cardinality = 0;
@@ -30,7 +30,7 @@ test_case generate_instance() {
         total_set_sum += current_set_element;
     }
 
-    std::uniform_int_distribution<int> target_sum_distribution(minimum_restricted_sum, max(minimum_restricted_sum, total_set_sum * 2));
+    std::uniform_int_distribution<int> target_sum_distribution(MINIMUM_RESTRICTED_SUM, max(MINIMUM_RESTRICTED_SUM, total_set_sum * 2));
 
-    return {target_sum_distribution(gen), total_set};
+    return {target_sum_distribution(gen), total_set_sum, total_set};
 }
