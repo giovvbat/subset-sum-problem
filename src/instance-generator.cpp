@@ -6,8 +6,8 @@ using namespace std;
 using test_case = tuple<int, int, insertion_set<int>>; // set, total sum and target sum
 
 #define MINIMUM_ELEMENT_RANGE 0 // fixed
-#define MAXIMUM_ELEMENT_RANGE 10 // changeable
-#define CARDINALITY_RANGE 1, 10 // fixed, changeable
+#define MAXIMUM_ELEMENT_RANGE 1000 // changeable
+#define CARDINALITY_RANGE 1, 25 // fixed, changeable
 #define MINIMUM_RESTRICTED_SUM 1 // fixed
 
 test_case generate_instance() {
@@ -30,7 +30,7 @@ test_case generate_instance() {
         total_set_sum += current_set_element;
     }
 
-    std::uniform_int_distribution<int> target_sum_distribution(MINIMUM_RESTRICTED_SUM, max(MINIMUM_RESTRICTED_SUM, total_set_sum * 2));
+    std::uniform_int_distribution<int> target_sum_distribution(MINIMUM_RESTRICTED_SUM, max((double) MINIMUM_RESTRICTED_SUM, total_set_sum * 1.5));
 
     return {target_sum_distribution(gen), total_set_sum, total_set};
 }
