@@ -1,10 +1,11 @@
 #include <iostream>
+#include <algorithm>
 #include "../include/insertion_set.hpp"
 
 using namespace std;
 using candidate = tuple<int, insertion_set<int>>; // sum and subset
 
-#define epsilon 0.2
+#define epsilon 0.9
 
 bool custom_sort(tuple<int, insertion_set<int>> first_element, tuple<int, insertion_set<int>> second_element) { 
     return get<0>(first_element) < get<0>(second_element); 
@@ -34,26 +35,27 @@ void trim_all_candidates(vector<candidate>& all_candidates) {
     }
 }
 
-insertion_set<int> subset_sum(insertion_set<int> numbers, int restricted_sum) {
+candidate subset_sum(int restricted_sum, insertion_set<int> numbers) {
     vector<candidate> all_candidates = {{0, insertion_set<int>{}}};
     vector<candidate> current_candidates = all_candidates;
-    insertion_set<int> new_candidate_subset = insertion_set<int>{};
-    insertion_set<int> best_candidate_subset = insertion_set<int>{};
+    insertion_set<int> best_candidate_subset = get<1>(all_candidates[0]);
 
     for (int number : numbers) {
         current_candidates = all_candidates;
 
         for (candidate current_candidate : current_candidates) {
             if (get<0>(current_candidate) + number <= restricted_sum) {
-                new_candidate_subset = get<1>(current_candidate);
+                insertion_set<int> new_candidate_subset = get<1>(current_candidate);
                 new_candidate_subset.insert(number);
 
+                candidate new_candidate = {get<0>(current_candidate) + number, new_candidate_subset};
+
                 // otimização: se é igual ao limite de soma, já sabemos que é a solução ótima
-                if (get<0>(current_candidate) + number == restricted_sum) {
-                    return new_candidate_subset;
+                if (get<0>(new_candidate) == restricted_sum) {
+                    return new_candidate;
                 }
 
-                all_candidates.push_back({get<0>(current_candidate) + number, new_candidate_subset});
+                all_candidates.push_back(new_candidate);
             }
         }
 
@@ -64,5 +66,5 @@ insertion_set<int> subset_sum(insertion_set<int> numbers, int restricted_sum) {
         trim_all_candidates(all_candidates);
     }
 
-    return get<1>(all_candidates[all_candidates.size() - 1]);
+    return all_candidates[all_candidates.size() - 1];
 }

@@ -20,12 +20,16 @@ public:
         }
     }
 
-    void insert(const T& value) {
+    bool insert(const T& value) {
         auto result = seen.insert(value);
 
         if (result.second) {
             data.push_back(value);
+
+            return true;
         }
+
+        return false;
     }
 
     size_t size() const { return data.size(); }
