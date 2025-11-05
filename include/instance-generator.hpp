@@ -1,10 +1,11 @@
 #ifndef INSTANCE_GENERATOR_HPP
 #define INSTANCE_GENERATOR_HPP
 
-#include "../include/insertion-set.hpp"
 #include <tuple>
+#include <set>
 
-using test_case = std::tuple<int, int, insertion_set<int>>;
+using namespace std;
+using test_case = std::tuple<int, int, set<int>>;
 
 test_case generate_instance();
 

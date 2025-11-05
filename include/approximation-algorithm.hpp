@@ -1,11 +1,12 @@
 #ifndef APPROXIMATION_ALGORITHM_HPP
 #define APPROXIMATION_ALGORITHM_HPP
 
-#include "../include/insertion-set.hpp"
 #include <tuple>
+#include <set>
 
-using candidate = std::tuple<int, insertion_set<int>>; 
+using namespace std;
+using candidate = std::tuple<int, set<int>>; 
 
-candidate subset_sum(int restricted_sum, insertion_set<int> numbers, double epsilon);
+candidate approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon);
 
 #endif // APPROXIMATION_ALGORITHM_HPP

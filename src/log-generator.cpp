@@ -2,12 +2,12 @@
 #include <fstream>
 #include <filesystem>
 #include <chrono>
-#include "../include/insertion-set.hpp"
+#include <set>
 
 using namespace std;
 namespace fs = std::filesystem;
 
-void generate_log(insertion_set<int> original_set, int target_sum, int total_original_set_sum, double epsilon, insertion_set<int> found_subset, int found_sum) {
+void generate_approximation_log(set<int> original_set, int target_sum, int total_original_set_sum, double epsilon, set<int> found_subset, int found_sum) {
     try {
         fs::path logs_dir = fs::current_path() / "logs";
         fs::create_directories(logs_dir);
@@ -15,7 +15,7 @@ void generate_log(insertion_set<int> original_set, int target_sum, int total_ori
         auto now = chrono::system_clock::now();
         auto millis = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count();
 
-        string file_name = "log-" + to_string(millis) + ".txt";
+        string file_name = "apr-log-" + to_string(millis) + ".txt";
         fs::path file_path = logs_dir / file_name;
         ofstream log_file(file_path);
 
@@ -23,6 +23,7 @@ void generate_log(insertion_set<int> original_set, int target_sum, int total_ori
             cerr << "error while creating log file at: " << file_path << endl;
         }
 
+        log_file << "ALGORITHM CHOICE: APPROXIMATION\n" << endl;
         log_file << "EPSILON: " << epsilon << endl;
         log_file << "TARGET SUM: " << target_sum << endl;
         log_file << "TOTAL ORIGINAL SET SUM: " << total_original_set_sum << endl;
@@ -42,8 +43,75 @@ void generate_log(insertion_set<int> original_set, int target_sum, int total_ori
         log_file << "}";
 
         log_file.close();
+    } catch (const exception& e) {
+        cerr << "error: " << e.what() << endl;
     }
-    catch (const exception& e) {
+}
+
+void generate_exact_log(set<int> original_set, int target_sum, int total_original_set_sum, set<int> found_subset, int found_sum) {
+    try {
+        fs::path logs_dir = fs::current_path() / "logs";
+        fs::create_directories(logs_dir);
+
+        auto now = chrono::system_clock::now();
+        auto millis = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count();
+
+        string file_name = "exc-log-" + to_string(millis) + ".txt";
+        fs::path file_path = logs_dir / file_name;
+        ofstream log_file(file_path);
+
+        if (!log_file) {
+            cerr << "error while creating log file at: " << file_path << endl;
+        }
+
+        log_file << "ALGORITHM CHOICE: EXACT\n" << endl;
+        log_file << "TARGET SUM: " << target_sum << endl;
+        log_file << "TOTAL ORIGINAL SET SUM: " << total_original_set_sum << endl;
+        log_file << "ORIGINAL SET: { ";
+
+        for (int element : original_set) {
+            log_file << element << " ";
+        }
+    
+        log_file << "}" << endl << endl << "FOUND SUM: " << found_sum << endl;
+        log_file << "FOUND SUBSET: { ";
+
+        for (int element : found_subset) {
+            log_file << element << " ";
+        }
+
+        log_file << "}";
+
+        log_file.close();
+    } catch (const exception& e) {
+        cerr << "error: " << e.what() << endl;
+    }
+}
+
+void generate_comparative_log(int target_sum, int total_original_set_sum, int great_sum, int found_sum, double epsilon) {
+    try {
+        fs::path logs_dir = fs::current_path() / "logs";
+        fs::create_directories(logs_dir);
+
+        auto now = chrono::system_clock::now();
+        auto millis = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count();
+
+        string file_name = "cmp-log-" + to_string(millis) + ".txt";
+        fs::path file_path = logs_dir / file_name;
+        ofstream log_file(file_path);
+
+        if (!log_file) {
+            cerr << "error while creating log file at: " << file_path << endl;
+        }
+
+        log_file << "TARGET SUM: " << target_sum << endl;
+        log_file << "TOTAL ORIGINAL SET SUM: " << total_original_set_sum << endl << endl;
+        log_file << "GREAT SUM: " << great_sum << endl;
+        log_file << "APPROXIMATION SUM: " << found_sum << " (EPSILON: " << epsilon << ")" << endl;
+        log_file << "APPROXIMATION SUM/GREAT SUM = " << std::fixed << std::setprecision(4) << static_cast<double>(found_sum) / great_sum << std::endl;
+
+        log_file.close();
+    } catch (const exception& e) {
         cerr << "error: " << e.what() << endl;
     }
 }
