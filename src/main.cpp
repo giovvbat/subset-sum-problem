@@ -7,19 +7,19 @@
 
 using namespace std;
 using set_data = tuple<int, int, set<int>>; // target sum, total sum and total set
-using resulting_candidate = tuple<int, set<int>>; // found sum and found subset
+using resulting_approximation_candidate = tuple<int, set<int>>; // found sum and found subset
 
 #define EPSILON 0.4
 
 int main() { 
     set_data instance = generate_instance();
-    resulting_candidate exact_result = exact_subset_sum(get<0>(instance), get<2>(instance));
-    resulting_candidate approximation_result = approximation_subset_sum(get<0>(instance), get<2>(instance), EPSILON);
+    int exact_result = exact_subset_sum(get<0>(instance), get<2>(instance));
+    resulting_approximation_candidate approximation_result = approximation_subset_sum(get<0>(instance), get<2>(instance), EPSILON);
 
     // careful: if not comparative, following log printing function must reflect algorithm type of choice!
-    generate_exact_log(get<2>(instance), get<0>(instance), get<1>(instance), get<1>(exact_result), get<0>(exact_result));
+    generate_exact_log(get<2>(instance), get<0>(instance), get<1>(instance), exact_result);
     
-    generate_comparative_log(get<0>(instance), get<1>(instance), get<0>(exact_result), get<0>(approximation_result), EPSILON);
+    // generate_comparative_log(get<0>(instance), get<1>(instance), exact_result, get<0>(approximation_result), EPSILON);
 
     cout << "ALGORITHM CHOICE: EXACT\n" << endl; // --- exclusive to exact algorithm
 
@@ -32,14 +32,7 @@ int main() {
         cout << element << " ";
     }
 
-    cout << "}" << endl << endl << "FOUND SUM: " << get<0>(exact_result) << endl;
-    cout << "FOUND SUBSET: { ";
-
-    for (int element : get<1>(exact_result)) {
-        cout << element << " ";
-    }
-
-    cout << "}";
+    cout << "}" << endl << endl << "GREAT SUM: " << exact_result << endl;
 
     return 0;
 }

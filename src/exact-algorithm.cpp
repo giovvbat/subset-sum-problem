@@ -5,33 +5,30 @@
 #include <algorithm>
 
 using namespace std;
-using candidate = tuple<int, set<int>>; // sum and subset
+// using candidate = tuple<int, set<int>>; --- sum and subset
 
-candidate exact_subset_sum(int restricted_sum, set<int> numbers) {
-    set<candidate> unique_fitting_candidates;
-    candidate total_max_candidate = {0, set<int>{}}; // sum and set
+int exact_subset_sum(int restricted_sum, set<int> numbers) {
+    set<int> unique_fitting_sums;
+    int total_max_sum = 0; // sum
     
-    unique_fitting_candidates.insert(total_max_candidate);
+    unique_fitting_sums.insert(total_max_sum);
 
     for (int number : numbers) {
-        set<candidate> current_sums_vec = unique_fitting_candidates;
+        set<int> current_sums = unique_fitting_sums;
 
-        for (auto [sum, subset] : current_sums_vec) {
+        for (int sum : current_sums) {
             if (sum + number <= restricted_sum) {
-                set<int> new_subset = subset;
-                new_subset.insert(number);
+                int new_sum = sum + number;
+                unique_fitting_sums.insert(new_sum);
 
-                candidate new_candidate = {sum + number, new_subset};
-                unique_fitting_candidates.insert(new_candidate);
-
-                if (get<0>(new_candidate) == restricted_sum) {
-                    return new_candidate;
-                } else if (get<0>(new_candidate) > get<0>(total_max_candidate)) {
-                    total_max_candidate = new_candidate;
+                if (new_sum == restricted_sum) {
+                    return new_sum;
+                } else if (new_sum > total_max_sum) {
+                    total_max_sum = new_sum;
                 }
             }
         }
     }
 
-    return total_max_candidate;
+    return total_max_sum;
 }

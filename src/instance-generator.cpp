@@ -7,7 +7,7 @@ using test_case = tuple<int, int, set<int>>; // set, total sum and target sum
 
 #define MINIMUM_ELEMENT_RANGE 0 // fixed
 #define MAXIMUM_ELEMENT_RANGE 500 // changeable
-#define CARDINALITY_RANGE 1, 20 // fixed, changeable
+#define CARDINALITY_RANGE 1, 50 // fixed, changeable
 #define MINIMUM_RESTRICTED_SUM 1 // fixed
 
 test_case generate_instance() {
