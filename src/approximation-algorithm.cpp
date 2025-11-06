@@ -9,14 +9,14 @@ bool custom_sort(tuple<int, set<int>> first_element, tuple<int, set<int>> second
     return get<0>(first_element) < get<0>(second_element); 
 }
 
-void trim_all_candidates(vector<candidate>& all_candidates, double approximation_factor) {
+void trim_all_sums(vector<int>& all_sums, double approximation_factor) {
     int current_earlier_comparison_index = 0;
-    int current_later_comparison_index = 1;
-    vector<int> indexes_to_be_removed = {};
+        int current_later_comparison_index = 1;
+        vector<int> indexes_to_be_removed = {};
 
-    while (current_later_comparison_index != all_candidates.size()) {
-        int first_element = get<0>(all_candidates[current_earlier_comparison_index]);
-        int second_element = get<0>(all_candidates[current_later_comparison_index]);
+    while (current_later_comparison_index != all_sums.size()) {
+        int first_element = all_sums[current_earlier_comparison_index];
+        int second_element = all_sums[current_later_comparison_index];
 
         if (second_element > (first_element * (1 + approximation_factor))) {
             current_earlier_comparison_index = current_later_comparison_index;
@@ -29,35 +29,30 @@ void trim_all_candidates(vector<candidate>& all_candidates, double approximation
 
     for (int i = indexes_to_be_removed.size() - 1; i >= 0; i--) {
         int index_to_be_removed = indexes_to_be_removed[i];
-        all_candidates.erase(all_candidates.begin() + index_to_be_removed);
+        all_sums.erase(all_sums.begin() + index_to_be_removed);
     }
 }
 
-candidate approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon) {
-    vector<candidate> all_candidates = {{0, set<int>{}}};
-    vector<candidate> current_candidates = all_candidates;
-    set<int> best_candidate_subset = get<1>(all_candidates[0]);
+int approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon) {
+    vector<int> all_sums = {0}, current_sums = all_sums;
     double approximation_factor = epsilon / (2 * numbers.size());
 
     for (int number : numbers) {
-        current_candidates = all_candidates;
+        current_sums = all_sums;
 
-        for (candidate current_candidate : current_candidates) {
-            if (get<0>(current_candidate) + number <= restricted_sum) {
-                set<int> new_candidate_subset = get<1>(current_candidate);
-                new_candidate_subset.insert(number);
-                
-                candidate new_candidate = {get<0>(current_candidate) + number, new_candidate_subset};
-                all_candidates.push_back(new_candidate);
+        for (int current_sum : current_sums) {
+            if (current_sum + number <= restricted_sum) {
+                int new_candidate_sum = current_sum + number;
+                all_sums.push_back(new_candidate_sum);
             }
         }
 
-        // ordenando os candidatos em relação à soma
-        sort(all_candidates.begin(), all_candidates.end(), custom_sort);
+        // ordenando as somas
+        sort(all_sums.begin(), all_sums.end());
 
-        // fazendo o trim dos candidatos
-        trim_all_candidates(all_candidates, approximation_factor);
+        // fazendo o trim das somas
+        trim_all_sums(all_sums, approximation_factor);
     }
 
-    return all_candidates[all_candidates.size() - 1];
+    return all_sums[all_sums.size() - 1];
 }

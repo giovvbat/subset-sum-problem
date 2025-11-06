@@ -3,14 +3,14 @@
 #include <set>
 
 using namespace std;
-using test_case = tuple<int, int, set<int>>; // set, total sum and target sum
+using instance_data = tuple<int, int, set<int>>; // set, total sum and target sum
 
 #define MINIMUM_ELEMENT_RANGE 0 // fixed
-#define MAXIMUM_ELEMENT_RANGE 500 // changeable
-#define CARDINALITY_RANGE 1, 50 // fixed, changeable
+#define MAXIMUM_ELEMENT_RANGE 1000 // changeable
+#define CARDINALITY_RANGE 1, 10 // fixed, changeable
 #define MINIMUM_RESTRICTED_SUM 1 // fixed
 
-test_case generate_instance() {
+instance_data generate_instance() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> cardinality_distribution(CARDINALITY_RANGE);
