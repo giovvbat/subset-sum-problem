@@ -41,7 +41,7 @@ void generate_approximation_log(set<int> original_set, int target_sum, int total
     }
 }
 
-void generate_exact_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum) {
+void generate_exact_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, set<int> great_subset) {
     try {
         fs::path logs_dir = fs::current_path() / "logs";
         fs::create_directories(logs_dir);
@@ -66,7 +66,13 @@ void generate_exact_log(set<int> original_set, int target_sum, int total_origina
             log_file << element << " ";
         }
     
-        log_file << "}" << endl << endl << "GREAT SUM: " << great_sum << endl;
+        log_file << "}" << endl << endl << "GREAT SUM: " << great_sum << endl << "GREAT SUBSET: { ";
+
+        for (int element : great_subset) {
+            log_file << element << " ";
+        }
+
+        log_file << "}" << endl;
 
         log_file.close();
     } catch (const exception& e) {

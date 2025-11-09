@@ -5,8 +5,8 @@
 #include <set>
 
 using namespace std;
-using candidate = std::tuple<int, set<int>>; 
+using result = std::tuple<int, set<int>>; 
 
-int approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon);
+result approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon);
 
 #endif // APPROXIMATION_ALGORITHM_HPP

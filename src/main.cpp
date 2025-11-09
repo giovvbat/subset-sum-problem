@@ -8,30 +8,17 @@
 
 using namespace std;
 using instance_data = tuple<int, int, set<int>>; // target sum, total sum and total set
-// using resulting_approximation_candidate = tuple<int, set<int>>; --- found sum and found subset
+using result = tuple<int, set<int>>; // found sum and found subset
 
 #define EPSILON 0.99
 
-int main() { 
+int main() {
     instance_data instance = generate_instance();
-    int exact_result = exact_subset_sum(get<0>(instance), get<2>(instance));
-    int approximation_result = approximation_subset_sum(get<0>(instance), get<2>(instance), EPSILON);
+    
+    result exact_result = exact_subset_sum(get<0>(instance), get<2>(instance));
+    result approximation_result = approximation_subset_sum(get<0>(instance), get<2>(instance), EPSILON);
 
-    // careful: if not comparative, following log printing function calls must reflect algorithm type of choice!
-    generate_approximation_log(get<2>(instance), get<0>(instance), get<1>(instance), approximation_result, EPSILON);
-    generate_exact_log(get<2>(instance), get<0>(instance), get<1>(instance), exact_result);
-    generate_comparative_log(get<2>(instance), get<0>(instance), get<1>(instance), exact_result, approximation_result, EPSILON);
-
-    cout << "TARGET SUM: " << get<0>(instance) << endl;
-    cout << "TOTAL ORIGINAL SET SUM: " << get<1>(instance) << endl << "ORIGINAL SET: { ";
-
-    for (int element : get<2>(instance)) {
-        cout << element << " ";
-    }
-
-    cout << "}" << endl << endl << "GREAT SUM: " << exact_result << endl;
-    cout << "APPROXIMATION SUM: " << approximation_result << " (EPSILON: " << EPSILON << ")" << endl << endl;
-    cout << "APPROXIMATION SUM/GREAT SUM = " << std::fixed << std::setprecision(4) << static_cast<double>(approximation_result) / exact_result << std::endl;
+    generate_comparative_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(exact_result), get<0>(approximation_result), EPSILON);
 
     return 0;
 }

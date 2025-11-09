@@ -7,7 +7,7 @@ using instance_data = tuple<int, int, set<int>>; // set, total sum and target su
 
 #define MINIMUM_ELEMENT_RANGE 0 // fixed
 #define MAXIMUM_ELEMENT_RANGE 1000 // changeable
-#define CARDINALITY_RANGE 1, 10 // fixed, changeable
+#define CARDINALITY_RANGE 1, 50 // fixed, changeable
 #define MINIMUM_RESTRICTED_SUM 1 // fixed
 
 instance_data generate_instance() {
