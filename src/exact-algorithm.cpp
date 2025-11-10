@@ -6,7 +6,7 @@
 #include <algorithm>
 
 using namespace std;
-using result = tuple<int, set<int>>; // sum and subset
+using result = tuple<int, set<int>, double>; // sum, subset, execution time
 
 vector<vector<bool>> retrieve_sum_matrix(int restricted_sum, set<int> numbers) {
     vector<bool> first_matrix_line = {true};
@@ -38,7 +38,7 @@ vector<vector<bool>> retrieve_sum_matrix(int restricted_sum, set<int> numbers) {
     return sum_matrix;
 }
 
-result retrieve_great_solution(vector<vector<bool>> sum_matrix, set<int> numbers) {
+tuple<int, set<int>> retrieve_great_solution(vector<vector<bool>> sum_matrix, set<int> numbers) {
     int great_sum = 0;
     set<int> great_subset = {};
     vector<bool> last_sum_matrix_line = sum_matrix[sum_matrix.size() - 1];
@@ -70,6 +70,15 @@ result retrieve_great_solution(vector<vector<bool>> sum_matrix, set<int> numbers
     return {great_sum, great_subset};
 }
 
-result exact_subset_sum(int restricted_sum, set<int> numbers) {
-    return retrieve_great_solution(retrieve_sum_matrix(restricted_sum, numbers), numbers);
+result exact_subset_sum(int restricted_sum, set<int> numbers) {  
+    auto start = std::chrono::steady_clock::now();
+
+    vector<vector<bool>> sum_matrix = retrieve_sum_matrix(restricted_sum, numbers);
+    tuple<int, set<int>> solution_pair = retrieve_great_solution(sum_matrix, numbers);
+
+    auto end = std::chrono::steady_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end - start;
+
+    return {get<0>(solution_pair), get<1>(solution_pair), elapsed_seconds.count()};
 }

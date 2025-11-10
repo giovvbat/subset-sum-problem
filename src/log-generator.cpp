@@ -5,9 +5,9 @@
 #include <set>
 
 using namespace std;
-namespace fs = std::filesystem;
+namespace fs = filesystem;
 
-void generate_approximation_log(set<int> original_set, int target_sum, int total_original_set_sum, int found_sum, double epsilon) {
+void generate_approximation_log(set<int> original_set, int target_sum, int total_original_set_sum, int found_sum, set<int> found_subset, double epsilon, double execution_time) {
     try {
         fs::path logs_dir = fs::current_path() / "logs";
         fs::create_directories(logs_dir);
@@ -33,7 +33,13 @@ void generate_approximation_log(set<int> original_set, int target_sum, int total
             log_file << element << " ";
         }
     
-        log_file << "}" << endl << endl << "FOUND SUM: " << found_sum << endl;
+        log_file << "}" << endl << endl << "FOUND SUM: " << "FOUND SUBSET: { ";
+
+        for (int element : found_subset) {
+            log_file << element << " ";
+        }
+
+        log_file << "}" << endl << "EXECUTION TIME: " << execution_time << endl;
 
         log_file.close();
     } catch (const exception& e) {
@@ -41,7 +47,7 @@ void generate_approximation_log(set<int> original_set, int target_sum, int total
     }
 }
 
-void generate_exact_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, set<int> great_subset) {
+void generate_exact_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, set<int> great_subset, double execution_time) {
     try {
         fs::path logs_dir = fs::current_path() / "logs";
         fs::create_directories(logs_dir);
@@ -72,7 +78,7 @@ void generate_exact_log(set<int> original_set, int target_sum, int total_origina
             log_file << element << " ";
         }
 
-        log_file << "}" << endl;
+        log_file << "}" << endl << "EXECUTION TIME: " << execution_time << endl;
 
         log_file.close();
     } catch (const exception& e) {
@@ -80,7 +86,7 @@ void generate_exact_log(set<int> original_set, int target_sum, int total_origina
     }
 }
 
-void generate_comparative_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, int found_sum, double epsilon) {
+void generate_comparative_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, int found_sum, double epsilon, double exact_execution_time, double approximation_execution_time) {
     try {
         fs::path logs_dir = fs::current_path() / "logs";
         fs::create_directories(logs_dir);
@@ -104,8 +110,11 @@ void generate_comparative_log(set<int> original_set, int target_sum, int total_o
         }
     
         log_file << "}" << endl << endl << "GREAT SUM: " << great_sum << endl;
-        log_file << "APPROXIMATION SUM: " << found_sum << " (EPSILON: " << epsilon << ")" << endl << endl;
-        log_file << "APPROXIMATION SUM/GREAT SUM = " << std::fixed << std::setprecision(4) << static_cast<double>(found_sum) / great_sum << std::endl;
+        log_file << "APPROXIMATION SUM: " << found_sum << " (EPSILON: " << epsilon << ")" << endl;
+        log_file << "APPROXIMATION SUM/GREAT SUM = " << fixed << setprecision(4) << static_cast<double>(found_sum) / great_sum << endl << endl;
+
+        log_file << "EXACT ALGORITHM EXECUTION TIME: " << exact_execution_time << endl;
+        log_file << "APPROXIMATION ALGORITHM EXECUTION TIME: " << approximation_execution_time << endl;
 
         log_file.close();
     } catch (const exception& e) {

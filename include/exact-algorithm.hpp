@@ -5,7 +5,7 @@
 #include <set>
 
 using namespace std;
-using result = std::tuple<int, set<int>>;
+using result = tuple<int, set<int>, double>;
 
 result exact_subset_sum(int restricted_sum, set<int> numbers);
 

@@ -3,13 +3,14 @@
 #include <set>
 
 using namespace std;
-using result = tuple<int, set<int>>; // sum and subset
+using result_data = tuple<int, set<int>>; // sum and subset
+using result = tuple<int, set<int>, double>; // result and execution time
 
 bool custom_sort(tuple<int, set<int>> first_element, tuple<int, set<int>> second_element) { 
     return get<0>(first_element) < get<0>(second_element); 
 }
 
-void trim_all_candidates(vector<result>& all_candidates, double approximation_factor) {
+void trim_all_candidates(vector<result_data>& all_candidates, double approximation_factor) {
     int current_earlier_comparison_index = 0;
     int current_later_comparison_index = 1;
     vector<int> indexes_to_be_removed = {};
@@ -34,20 +35,21 @@ void trim_all_candidates(vector<result>& all_candidates, double approximation_fa
 }
 
 result approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon) {
-    vector<result> all_candidates = {{0, set<int>{}}};
-    vector<result> current_candidates = all_candidates;
-    set<int> best_candidate_subset = get<1>(all_candidates[0]);
+    auto start = std::chrono::steady_clock::now();
+
+    vector<result_data> all_candidates = {{0, set<int>{}}};
+    vector<result_data> current_candidates = all_candidates;
     double approximation_factor = epsilon/(2 * numbers.size());
 
     for (int number : numbers) {
         current_candidates = all_candidates;
 
-        for (result current_candidate : current_candidates) {
+        for (result_data current_candidate : current_candidates) {
             if (get<0>(current_candidate) + number <= restricted_sum) {
                 set<int> new_candidate_subset = get<1>(current_candidate);
                 new_candidate_subset.insert(number);
                 
-                result new_candidate = {get<0>(current_candidate) + number, new_candidate_subset};
+                result_data new_candidate = {get<0>(current_candidate) + number, new_candidate_subset};
                 all_candidates.push_back(new_candidate);
             }
         }
@@ -59,5 +61,9 @@ result approximation_subset_sum(int restricted_sum, set<int> numbers, double eps
         trim_all_candidates(all_candidates, approximation_factor);
     }
 
-    return all_candidates[all_candidates.size() - 1];
+    auto end = std::chrono::steady_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end - start;
+
+    return make_tuple(get<0>(all_candidates[all_candidates.size() - 1]), get<1>(all_candidates[all_candidates.size() - 1]), elapsed_seconds.count());
 }
