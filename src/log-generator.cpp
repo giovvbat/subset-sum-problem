@@ -33,13 +33,13 @@ void generate_approximation_log(set<int> original_set, int target_sum, int total
             log_file << element << " ";
         }
     
-        log_file << "}" << endl << endl << "FOUND SUM: " << "FOUND SUBSET: { ";
+        log_file << "}" << endl << endl << "FOUND SUM: " << found_sum << endl << "FOUND SUBSET: { ";
 
         for (int element : found_subset) {
             log_file << element << " ";
         }
 
-        log_file << "}" << endl << "EXECUTION TIME: " << execution_time << endl;
+        log_file << "}" << endl << endl << "EXECUTION TIME: " << execution_time << endl;
 
         log_file.close();
     } catch (const exception& e) {
@@ -78,7 +78,7 @@ void generate_exact_log(set<int> original_set, int target_sum, int total_origina
             log_file << element << " ";
         }
 
-        log_file << "}" << endl << "EXECUTION TIME: " << execution_time << endl;
+        log_file << "}" << endl << endl << "EXECUTION TIME: " << execution_time << endl;
 
         log_file.close();
     } catch (const exception& e) {

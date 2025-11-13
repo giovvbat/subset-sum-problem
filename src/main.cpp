@@ -18,6 +18,8 @@ int main() {
     result exact_result = exact_subset_sum(get<0>(instance), get<2>(instance));
     result approximation_result = approximation_subset_sum(get<0>(instance), get<2>(instance), EPSILON);
 
+    generate_approximation_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(approximation_result), get<1>(approximation_result), EPSILON, get<2>(approximation_result));
+    generate_exact_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(exact_result), get<1>(exact_result), get<2>(exact_result));
     generate_comparative_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(exact_result), get<0>(approximation_result), EPSILON, get<2>(exact_result), get<2>(approximation_result));
 
     return 0;
