@@ -5,57 +5,58 @@
 #include <unordered_set>
 
 using namespace std;
-using result_data = tuple<int, set<int>>; // sum and subset
+using binary_result = tuple<float, vector<int>>; // fitness and binary subset
+using regular_result = tuple<int, set<int>>; // sum and subset
 
-set<int> retrieve_candidate_subset_from_binary(set<int> numbers, vector<int> binary_numbers) {
-    set<int> candidate_subset = {};
+int sum_binary(set<int> numbers, vector<int> binary_numbers) {
+    int sum = 0;
     auto iterator = numbers.begin();
 
     for (int i = 0; i < binary_numbers.size(); i++) {
         if (binary_numbers[i] == 1) {
-            candidate_subset.insert(*iterator);
+            sum += *iterator;
         }
 
         iterator++;
     }
 
-    return candidate_subset;
+    return sum;
 }
 
-result_data retrieve_candidate_from_binary(set<int> numbers, vector<int> binary_numbers) {
-    set<int> candidate_subset = {};
-    int candidate_sum = 0;
+set<int> subset_binary(set<int> numbers, vector<int> binary_numbers) {
+    set<int> subset = {};
     auto iterator = numbers.begin();
 
     for (int i = 0; i < binary_numbers.size(); i++) {
         if (binary_numbers[i] == 1) {
-            candidate_subset.insert(*iterator);
-            candidate_sum += candidate_sum;
+            subset.insert(*iterator);
         }
 
         iterator++;
     }
 
-    return {candidate_sum, candidate_subset};
+    return subset;
 }
 
-int retrieve_candidate_sum_from_binary(set<int> numbers, vector<int> binary_numbers) {
-    int candidate_sum = 0;
+regular_result result_binary(set<int> numbers, vector<int> binary_numbers) {
+    set<int> subset = {};
+    int sum = 0;
     auto iterator = numbers.begin();
 
     for (int i = 0; i < binary_numbers.size(); i++) {
         if (binary_numbers[i] == 1) {
-            candidate_sum += *iterator;
+            subset.insert(*iterator);
+            sum += *iterator;
         }
 
         iterator++;
     }
 
-    return candidate_sum;
+    return {sum, subset};
 }
 
-float retrieve_candidate_fitness_from_binary(set<int> numbers, vector<int> binary_numbers, int target_sum) {
-    int candidate_sum = retrieve_candidate_sum_from_binary(numbers, binary_numbers);
+float fitness_binary(set<int> numbers, vector<int> binary_numbers, int target_sum) {
+    int candidate_sum = sum_binary(numbers, binary_numbers);
 
     if (candidate_sum <= target_sum) {
         return candidate_sum / target_sum;
@@ -64,15 +65,15 @@ float retrieve_candidate_fitness_from_binary(set<int> numbers, vector<int> binar
     }
 }
 
-vector<int> retrieve_best_generational_candidate(vector<vector<int>> generation, set<int> numbers, int target_sum) {
+vector<int> best_binary(vector<binary_result> generation, set<int> numbers, int target_sum) {
     vector<int> best = {}; 
-    float best_fitness = retrieve_candidate_fitness_from_binary(numbers, best, target_sum);
+    float best_fitness = 0;
 
-    for (vector<int> current : generation) {
-        float current_fitness = retrieve_candidate_fitness_from_binary(numbers, current, target_sum);
+    for (auto current : generation) {
+        float current_fitness = fitness_binary(numbers, get<1>(current), target_sum);
 
         if (current_fitness > best_fitness) {
-            best = current;
+            best = get<1>(current);
             best_fitness = current_fitness;
         }
     }
@@ -80,17 +81,17 @@ vector<int> retrieve_best_generational_candidate(vector<vector<int>> generation,
     return best;
 }
 
-vector<vector<int>> initialize_population(int cardinality_set) {
+vector<binary_result> initialize_population(set<int> numbers, int cardinality_set, int target_sum) {
     random_device rd;
     mt19937 gen(rd());
     bernoulli_distribution bit_value(0.5); // 50% de chance de 1
 
-    vector<vector<int>> population = {};
-    population.reserve(80);
+    vector<binary_result> population = {};
+    population.reserve(100);
 
     set<vector<int>> seen = {};
 
-    while (population.size() < 80) {
+    while (population.size() < 100) {
         vector<int> current(cardinality_set);
 
         for (int i = 0; i < cardinality_set; i++) {
@@ -99,13 +100,64 @@ vector<vector<int>> initialize_population(int cardinality_set) {
 
         if (seen.find(current) == seen.end()) {
             seen.insert(current);
-            population.push_back(current);
+            population.push_back({fitness_binary(numbers, current, target_sum), current});
         }
     }
 
     return population;
 }
 
-result_data genetic_subset_sum(int target_sum, set<int> numbers) {
-    return {};
+void apply_elitism(vector<binary_result>& descendants, vector<binary_result>& generation, set<int> numbers, int target_sum) {
+    vector<int> first = {}, second = {}; 
+    float first_fitness = 0, second_fitness = 0;
+
+    // finds two best individuals
+    for (auto& current : generation) {
+        float current_fitness = fitness_binary(numbers, get<1>(current), target_sum);
+
+        if (current_fitness > first_fitness) {
+            second_fitness = first_fitness;
+            second = first;
+
+            first_fitness = current_fitness;
+            first = get<1>(current);
+        } else if (current_fitness > second_fitness) {
+            second_fitness = current_fitness;
+            second = get<1>(current);
+        }
+    }
+
+    descendants.push_back({first_fitness, first});
+    descendants.push_back({second_fitness, second});
+}
+
+regular_result genetic_subset_sum(int target_sum, set<int> numbers) {
+    vector<binary_result> population = initialize_population(numbers, numbers.size(), target_sum);
+    vector<binary_result> descendents = {};
+
+    vector<int> best = best_binary(population, numbers, target_sum);
+    int imutable = 0, generation = 0;
+
+    while (generation < 500 && imutable < 100) {
+        // applying elitism for next generation
+        apply_elitism(descendents, population, numbers, target_sum);
+
+        vector<int> current_best = best_binary(population, numbers, target_sum);
+
+        if (sum_binary(numbers, current_best) == target_sum) {
+            return {result_binary(numbers, current_best)};
+        }
+
+        if (best == current_best) {
+            imutable++;
+        } else {
+            best = current_best;
+        }
+
+        population = descendents;
+        descendents.clear();
+        generation++;
+    }
+    
+    return {result_binary(numbers, best)};
 }
