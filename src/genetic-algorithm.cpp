@@ -199,8 +199,9 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
 
     if (numbers.empty()) {
         auto end = chrono::steady_clock::now();
+        chrono::duration<double> elapsed_seconds = end - start;
 
-        return {{0, {}}, 0, (end - start).count()};
+        return {{0, {}}, 0, elapsed_seconds.count()};
     }
     
     vector<binary_result> population = initialize_population(numbers, numbers.size(), target_sum, gen);
@@ -234,8 +235,9 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
 
         if (sum_binary(numbers, current_best) == target_sum) {
             auto end = chrono::steady_clock::now();
+            chrono::duration<double> elapsed_seconds = end - start;
 
-            return {result_binary(numbers, current_best), generation, (end - start).count()};
+            return {result_binary(numbers, current_best), generation, elapsed_seconds.count()};
         } else if (best == current_best) {
             imutable++;
         } else {
@@ -248,6 +250,7 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
     }
 
     auto end = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_seconds = end - start;
     
-    return {result_binary(numbers, best), generation, (end - start).count()};
+    return {result_binary(numbers, best), generation, elapsed_seconds.count()};
 }

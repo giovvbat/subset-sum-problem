@@ -21,7 +21,7 @@ vector<binary_result> initialize_population(const set<int>& numbers, int populat
 void apply_elitism(vector<binary_result>& descendants, vector<binary_result>& generation, const set<int>& numbers, int target_sum);
 vector<binary_result> crossover(binary_result mother, binary_result father, const set<int>& numbers, int target_sum, mt19937& gen);
 void mutate(binary_result& individual, mt19937& gen);
-genetic_result genetic_subset_sum(int target_sum, set<int>& numbers);
+genetic_result genetic_subset_sum(int target_sum, set<int> numbers);
 
 
 #endif // GENETIC_ALGORITHM_HPP

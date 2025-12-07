@@ -5,10 +5,10 @@
 using namespace std;
 using instance_data = tuple<int, int, set<int>>; // target sum, total sum and set
 
-#define MINIMUM_ELEMENT_RANGE 2
-#define MAXIMUM_ELEMENT_RANGE 1000
+#define MINIMUM_ELEMENT_RANGE 1000000
+#define MAXIMUM_ELEMENT_RANGE 1000020
 #define MINIMUM_CARDINALITY_RANGE 10
-#define MAXIMUM_CARDINALITY_RANGE 15
+#define MAXIMUM_CARDINALITY_RANGE 20
 
 instance_data generate_instance() {
     random_device rd;
