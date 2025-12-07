@@ -86,7 +86,7 @@ void generate_exact_log(set<int> original_set, int target_sum, int total_origina
     }
 }
 
-void generate_comparative_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, int found_sum, double epsilon, double exact_execution_time, double approximation_execution_time) {
+void generate_exact_approximation_comparative_log(set<int> original_set, int target_sum, int total_original_set_sum, int great_sum, int found_sum, double epsilon, double exact_execution_time, double approximation_execution_time) {
     try {
         fs::path logs_dir = fs::current_path() / "logs";
         fs::create_directories(logs_dir);

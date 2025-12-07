@@ -3,6 +3,7 @@
 #include <set>
 #include "../include/approximation-algorithm.hpp"
 #include "../include/exact-algorithm.hpp"
+#include "../include/genetic-algorithm.hpp"
 #include "../include/instance-generator.hpp"
 #include "../include/log-generator.hpp"
 
@@ -20,7 +21,7 @@ int main() {
 
     generate_approximation_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(approximation_result), get<1>(approximation_result), EPSILON, get<2>(approximation_result));
     generate_exact_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(exact_result), get<1>(exact_result), get<2>(exact_result));
-    generate_comparative_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(exact_result), get<0>(approximation_result), EPSILON, get<2>(exact_result), get<2>(approximation_result));
+    generate_exact_approximation_comparative_log(get<2>(instance), get<0>(instance), get<1>(instance), get<0>(exact_result), get<0>(approximation_result), EPSILON, get<2>(exact_result), get<2>(approximation_result));
 
     return 0;
 }
