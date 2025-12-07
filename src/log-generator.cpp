@@ -121,3 +121,42 @@ void generate_exact_approximation_comparative_log(set<int> original_set, int tar
         cerr << "error: " << e.what() << endl;
     }
 }
+
+void generate_genetic_log(set<int> original_set, int target_sum, int total_original_set_sum, int found_sum, set<int> found_subset, double execution_time, int number_iterations) {
+    try {
+        fs::path logs_dir = fs::current_path() / "logs";
+        fs::create_directories(logs_dir);
+
+        auto now = chrono::system_clock::now();
+        auto millis = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count();
+
+        string file_name = "gen-log-" + to_string(millis) + ".txt";
+        fs::path file_path = logs_dir / file_name;
+        ofstream log_file(file_path);
+
+        if (!log_file) {
+            cerr << "error while creating log file at: " << file_path << endl;
+        }
+
+        log_file << "ALGORITHM CHOICE: GENETIC" << endl;
+        log_file << "TARGET SUM: " << target_sum << endl;
+        log_file << "TOTAL ORIGINAL SET SUM: " << total_original_set_sum << endl;
+        log_file << "ORIGINAL SET: { ";
+
+        for (int element : original_set) {
+            log_file << element << " ";
+        }
+    
+        log_file << "}" << endl << endl << "FOUND SUM: " << found_sum << endl << "FOUND SUBSET: { ";
+
+        for (int element : found_subset) {
+            log_file << element << " ";
+        }
+
+        log_file << "}" << endl << endl << "EXECUTION TIME: " << execution_time << endl << "NUMBER OF ITERATIONS: " << number_iterations << endl;
+
+        log_file.close();
+    } catch (const exception& e) {
+        cerr << "error: " << e.what() << endl;
+    }
+}

@@ -71,14 +71,14 @@ tuple<int, set<int>> retrieve_great_solution(vector<vector<bool>> sum_matrix, se
 }
 
 result exact_subset_sum(int restricted_sum, set<int> numbers) {  
-    auto start = std::chrono::steady_clock::now();
+    auto start = chrono::steady_clock::now();
 
     vector<vector<bool>> sum_matrix = retrieve_sum_matrix(restricted_sum, numbers);
     tuple<int, set<int>> solution_pair = retrieve_great_solution(sum_matrix, numbers);
 
-    auto end = std::chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
 
-    std::chrono::duration<double> elapsed_seconds = end - start;
+    chrono::duration<double> elapsed_seconds = end - start;
 
     return {get<0>(solution_pair), get<1>(solution_pair), elapsed_seconds.count()};
 }

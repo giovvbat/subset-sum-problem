@@ -35,7 +35,7 @@ void trim_all_candidates(vector<result_data>& all_candidates, double approximati
 }
 
 result approximation_subset_sum(int restricted_sum, set<int> numbers, double epsilon) {
-    auto start = std::chrono::steady_clock::now();
+    auto start = chrono::steady_clock::now();
 
     vector<result_data> all_candidates = {{0, set<int>{}}};
     vector<result_data> current_candidates = all_candidates;
@@ -61,9 +61,9 @@ result approximation_subset_sum(int restricted_sum, set<int> numbers, double eps
         trim_all_candidates(all_candidates, approximation_factor);
     }
 
-    auto end = std::chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
 
-    std::chrono::duration<double> elapsed_seconds = end - start;
+    chrono::duration<double> elapsed_seconds = end - start;
 
     return make_tuple(get<0>(all_candidates[all_candidates.size() - 1]), get<1>(all_candidates[all_candidates.size() - 1]), elapsed_seconds.count());
 }
