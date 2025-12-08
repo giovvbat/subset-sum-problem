@@ -44,23 +44,19 @@ regular_result result_binary(const set<int>& numbers, const vector<int>& binary_
 }
 
 float fitness_binary(const set<int>& numbers, const vector<int>& binary_numbers, int target_sum) {
-    int candidate_sum = sum_binary(numbers, binary_numbers);
+    int sum = sum_binary(numbers, binary_numbers);
 
-    if (candidate_sum <= target_sum) {
-        return float(candidate_sum) / float(target_sum);
-    } else {
-        return 0;
-    }
+    return 1.0f / (1.0f + abs(sum - target_sum));
 }
 
 vector<int> best_binary(const vector<binary_result>& generation, const set<int>& numbers, int target_sum) {
     vector<int> best = {}; 
-    float best_fitness = 0;
+    float best_fitness = 0.0f;
 
     for (auto current : generation) {
         float current_fitness = get<0>(current);
 
-        if (current_fitness > best_fitness) {
+        if (current_fitness > best_fitness && current_fitness <= target_sum) {
             best = get<1>(current);
             best_fitness = current_fitness;
         }
@@ -83,6 +79,7 @@ vector<binary_result> initialize_population(const set<int>& numbers, int target_
         }
         
         population.push_back({fitness_binary(numbers, current, target_sum), current});
+    
     }
 
     return population;
@@ -90,7 +87,7 @@ vector<binary_result> initialize_population(const set<int>& numbers, int target_
 
 void apply_elitism(vector<binary_result>& descendants, vector<binary_result>& generation, const set<int>& numbers, int target_sum) {
     int first = -1, second = -1; 
-    float first_fitness = -1, second_fitness = -1;
+    float first_fitness = -1.0f, second_fitness = -1.0f;
 
     // finds two best individuals
     for (int i = 0; i < generation.size(); i++) {
@@ -122,14 +119,14 @@ void apply_elitism(vector<binary_result>& descendants, vector<binary_result>& ge
 }
 
 binary_result select(const vector<binary_result>& generation, const set<int>& numbers, int target_sum, mt19937& gen) {
-    float total_fitness = 0;
+    float total_fitness = 0.0f;
 
     for (auto& individual : generation) {
         total_fitness += fitness_binary(numbers, get<1>(individual), target_sum);
     }
 
     // fallback: if all fitnesses sum 0, selection is completely random
-    if (total_fitness == 0) {
+    if (total_fitness == 0.0f) {
         uniform_int_distribution<int> distribution(0, generation.size() - 1);
 
         return generation[distribution(gen)];
@@ -139,7 +136,7 @@ binary_result select(const vector<binary_result>& generation, const set<int>& nu
     uniform_real_distribution<float> pick(0, total_fitness);
 
     float sorted = pick(gen);
-    float cumulative = 0;
+    float cumulative = 0.0f;
 
     for (binary_result individual : generation) {
         cumulative += fitness_binary(numbers, get<1>(individual), target_sum);
@@ -181,7 +178,7 @@ vector<binary_result> crossover(binary_result mother, binary_result father, set<
 }
 
 void mutate(binary_result& individual, mt19937& gen) {
-    bernoulli_distribution flip_bit(double (1.0 / get<1>(individual).size()));
+    bernoulli_distribution flip_bit(float (1.0f / get<1>(individual).size()));
 
     for (int& gene : get<1>(individual)) {
         if (flip_bit(gen)) {
@@ -238,10 +235,6 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
 
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end - start;
-
-    if (fitness_binary(numbers, best, target_sum) == 0) {
-        return {{0, {}}, 0, elapsed_seconds.count()};
-    }
     
     return {result_binary(numbers, best), generation, elapsed_seconds.count()};
 }

@@ -17,7 +17,7 @@ using genetic_result = tuple<regular_result, int, double>; // sum, subset, numbe
 
 int main() {
     instance_data instance = generate_instance();
-    
+
     result exact = exact_subset_sum(get<0>(instance), get<2>(instance));
     result approximation = approximation_subset_sum(get<0>(instance), get<2>(instance), EPSILON);
     genetic_result genetic = genetic_subset_sum(get<0>(instance), get<2>(instance));
