@@ -69,13 +69,13 @@ vector<int> best_binary(const vector<binary_result>& generation, const set<int>&
     return best;
 }
 
-vector<binary_result> initialize_population(const set<int>& numbers, int population_size, int target_sum, mt19937& gen) {
+vector<binary_result> initialize_population(const set<int>& numbers, int target_sum, mt19937& gen) {
     bernoulli_distribution bit_value(0.5); // 50% de chance de 1
 
     vector<binary_result> population = {};
-    population.reserve(population_size);
+    population.reserve(100);
 
-    while (population.size() < population_size) {
+    while (population.size() < 100) {
         vector<int> current(numbers.size());
 
         for (int i = 0; i < numbers.size(); i++) {
@@ -196,23 +196,9 @@ void mutate(binary_result& individual, mt19937& gen) {
 
 genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
     auto start = chrono::steady_clock::now();
-
-    if (numbers.empty()) {
-        auto end = chrono::steady_clock::now();
-        chrono::duration<double> elapsed_seconds = end - start;
-
-        return {{0, {}}, 0, elapsed_seconds.count()};
-    }
     
-    vector<binary_result> population = initialize_population(numbers, numbers.size(), target_sum, gen);
+    vector<binary_result> population = initialize_population(numbers, target_sum, gen);
     vector<binary_result> descendents = {};
-    int population_size;
-
-    if (numbers.size() < 7) {
-        population_size = pow(2, numbers.size());
-    } else {
-        population_size = 100;
-    }
 
     vector<int> best = best_binary(population, numbers, target_sum);
     int imutable = 0, generation = 0;
@@ -221,7 +207,7 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
         // applying elitism for next generation
         apply_elitism(descendents, population, numbers, target_sum);
 
-        while (descendents.size() < population_size) {
+        while (descendents.size() < 100) {
             binary_result mother = select(population, numbers, target_sum, gen);
             binary_result father = select(population, numbers, target_sum, gen);
 

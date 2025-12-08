@@ -153,7 +153,7 @@ void generate_genetic_log(set<int> original_set, int target_sum, int total_origi
             log_file << element << " ";
         }
 
-        log_file << "}" << endl << endl << "EXECUTION TIME: " << execution_time << endl << "NUMBER OF ITERATIONS: " << number_iterations << endl;
+        log_file << "}" << endl << endl << "EXECUTION TIME: " << execution_time << endl << "NUMBER OF COMPLETE ITERATIONS: " << number_iterations << endl;
 
         log_file.close();
     } catch (const exception& e) {
