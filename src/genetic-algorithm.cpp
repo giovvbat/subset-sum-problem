@@ -241,6 +241,7 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
         } else if (best == current_best) {
             imutable++;
         } else {
+            imutable = 0;
             best = current_best;
         }
 
@@ -251,6 +252,10 @@ genetic_result genetic_subset_sum(int target_sum, set<int> numbers) {
 
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end - start;
+
+    if (fitness_binary(numbers, best, target_sum) == 0) {
+        return {{0, {}}, 0, elapsed_seconds.count()};
+    }
     
     return {result_binary(numbers, best), generation, elapsed_seconds.count()};
 }
