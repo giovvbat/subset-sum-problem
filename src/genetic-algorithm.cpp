@@ -46,6 +46,11 @@ regular_result result_binary(const set<int>& numbers, const vector<int>& binary_
 float fitness_binary(const set<int>& numbers, const vector<int>& binary_numbers, int target_sum) {
     int sum = sum_binary(numbers, binary_numbers);
 
+    if (sum > target_sum) {
+        return 1.0f / (1.0f + 2 * abs(sum - target_sum)); // 2 é um fator arbitrário de peso
+    
+    }
+
     return 1.0f / (1.0f + abs(sum - target_sum));
 }
 
@@ -56,7 +61,7 @@ vector<int> best_binary(const vector<binary_result>& generation, const set<int>&
     for (auto current : generation) {
         float current_fitness = get<0>(current);
 
-        if (current_fitness > best_fitness && current_fitness <= target_sum) {
+        if (current_fitness > best_fitness && sum_binary(numbers, get<1>(current)) <= target_sum) {
             best = get<1>(current);
             best_fitness = current_fitness;
         }

@@ -8,7 +8,7 @@
 #include "../include/log-generator.hpp"
 
 using namespace std;
-using instance_data = tuple<int, int, set<int>>; // target sum, total sum and total set sum
+using instance_data = tuple<int, int, set<int>>; // target sum, total sum and set
 using result = tuple<int, set<int>, double>; // found sum, found subset, execution time
 using regular_result = tuple<int, set<int>>; // sum and subset
 using genetic_result = tuple<regular_result, int, double>; // sum, subset, number of iterations and execution time
